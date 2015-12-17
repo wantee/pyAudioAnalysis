@@ -14,7 +14,7 @@ from sklearn.lda import LDA
 import csv
 import os.path
 import sklearn
-import sklearn.hmm
+import hmmlearn.hmm
 import cPickle
 import glob
 
@@ -320,7 +320,7 @@ def trainHMM_fromFile(wavFile, gtFile, hmmModelName, mtWin, mtStep):
     [F, _] = aF.mtFeatureExtraction(x, Fs, mtWin * Fs, mtStep * Fs, round(Fs * 0.050), round(Fs * 0.050))    # feature extraction
     startprob, transmat, means, cov = trainHMM_computeStatistics(F, flags)                    # compute HMM statistics (priors, transition matrix, etc)
 
-    hmm = sklearn.hmm.GaussianHMM(startprob.shape[0], "diag", startprob, transmat)            # hmm training
+    hmm = hmmlearn.hmm.GaussianHMM(startprob.shape[0], "diag", startprob, transmat)            # hmm training
     hmm.means_ = means
     hmm.covars_ = cov
 
@@ -381,7 +381,7 @@ def trainHMM_fromDir(dirPath, hmmModelName, mtWin, mtStep):
         else:
             Fall = numpy.concatenate((Fall, F), axis=1)
     startprob, transmat, means, cov = trainHMM_computeStatistics(Fall, flagsAll)        # compute HMM statistics
-    hmm = sklearn.hmm.GaussianHMM(startprob.shape[0], "diag", startprob, transmat)      # train HMM
+    hmm = hmmlearn.hmm.GaussianHMM(startprob.shape[0], "diag", startprob, transmat)      # train HMM
     hmm.means_ = means
     hmm.covars_ = cov
 
@@ -813,7 +813,7 @@ def speakerDiarization(fileName, numOfSpeakers, mtSize=2.0, mtStep=0.2, stWin=0.
     # Post-process method 1: hmm smoothing
     for i in range(1):
         startprob, transmat, means, cov = trainHMM_computeStatistics(MidTermFeaturesNormOr, cls)
-        hmm = sklearn.hmm.GaussianHMM(startprob.shape[0], "diag", startprob, transmat)            # hmm training
+        hmm = hmmlearn.hmm.GaussianHMM(startprob.shape[0], "diag", startprob, transmat)            # hmm training
         hmm.means_ = means; hmm.covars_ = cov
         cls = hmm.predict(MidTermFeaturesNormOr.T)                    
     
